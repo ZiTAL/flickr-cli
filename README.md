@@ -18,7 +18,7 @@ A command-line interface to [Flickr](https://www.flickr.com/). Upload and downlo
 		
 2. Install composer:
 
-	bash composer.sh
+		bash composer.sh
 
 3. Install dependencies:
 
