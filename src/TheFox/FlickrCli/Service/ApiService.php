@@ -51,7 +51,7 @@ class ApiService extends AbstractService
     /**
      * @return ApiFactory
      */
-    public function getApiFactory(): ApiFactory
+    public function getApiFactory()
     {
         // Set up the Flickr API.
         $metadata = new Metadata($this->consumerKey, $this->consumerSecret);
@@ -65,7 +65,7 @@ class ApiService extends AbstractService
     /**
      * @return array
      */
-    public function getPhotosetTitles(): array
+    public function getPhotosetTitles()
     {
         $apiFactory = $this->getApiFactory();
 

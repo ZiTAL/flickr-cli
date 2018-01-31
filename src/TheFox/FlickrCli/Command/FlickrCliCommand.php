@@ -75,13 +75,13 @@ abstract class FlickrCliCommand extends Command
         $this->output = new NullOutput();
         $this->configFilePath = 'config.yml';
         $this->isConfigFileRequired = true;
-        $this->config = [];
+        $this->config = array();
     }
 
     /**
      * @return int
      */
-    public function getExit(): int
+    public function getExit()
     {
         return $this->exit;
     }
@@ -89,7 +89,7 @@ abstract class FlickrCliCommand extends Command
     /**
      * @param int $exit
      */
-    public function setExit(int $exit)
+    public function setExit($exit)
     {
         $this->exit = $exit;
     }
@@ -97,7 +97,7 @@ abstract class FlickrCliCommand extends Command
     /**
      * @return LoggerInterface
      */
-    public function getLogger(): LoggerInterface
+    public function getLogger()
     {
         return $this->logger;
     }
@@ -105,7 +105,7 @@ abstract class FlickrCliCommand extends Command
     /**
      * @return InputInterface
      */
-    public function getInput(): InputInterface
+    public function getInput()
     {
         return $this->input;
     }
@@ -113,7 +113,7 @@ abstract class FlickrCliCommand extends Command
     /**
      * @return OutputInterface
      */
-    public function getOutput(): OutputInterface
+    public function getOutput()
     {
         return $this->output;
     }
@@ -121,7 +121,7 @@ abstract class FlickrCliCommand extends Command
     /**
      * @return string
      */
-    public function getConfigFilePath(): string
+    public function getConfigFilePath()
     {
         return $this->configFilePath;
     }
@@ -129,7 +129,7 @@ abstract class FlickrCliCommand extends Command
     /**
      * @return bool
      */
-    public function isConfigFileRequired(): bool
+    public function isConfigFileRequired()
     {
         return $this->isConfigFileRequired;
     }
@@ -137,7 +137,7 @@ abstract class FlickrCliCommand extends Command
     /**
      * @param bool $isConfigFileRequired
      */
-    public function setIsConfigFileRequired(bool $isConfigFileRequired)
+    public function setIsConfigFileRequired($isConfigFileRequired)
     {
         $this->isConfigFileRequired = $isConfigFileRequired;
     }
@@ -145,7 +145,7 @@ abstract class FlickrCliCommand extends Command
     /**
      * @return array
      */
-    public function getConfig(): array
+    public function getConfig()
     {
         return $this->config;
     }
@@ -153,7 +153,7 @@ abstract class FlickrCliCommand extends Command
     /**
      * @param array $config
      */
-    public function setConfig(array $config)
+    public function setConfig($config)
     {
         $this->config = $config;
     }
@@ -161,7 +161,7 @@ abstract class FlickrCliCommand extends Command
     /**
      * @return ApiService
      */
-    public function getApiService(): ApiService
+    public function getApiService()
     {
         return $this->apiService;
     }
@@ -181,7 +181,7 @@ abstract class FlickrCliCommand extends Command
      * @param InputInterface $input
      * @param OutputInterface $output
      */
-    protected function setup(InputInterface $input, OutputInterface $output)
+    protected function setup($input, $output)
     {
         $this->input = $input;
         $this->output = $output;
@@ -253,7 +253,7 @@ abstract class FlickrCliCommand extends Command
     /**
      * @return array
      */
-    public function loadConfig(): array
+    public function loadConfig()
     {
         $configFilePath = $this->getConfigFilePath();
         if (!$configFilePath) {
@@ -280,7 +280,7 @@ abstract class FlickrCliCommand extends Command
     /**
      * @param array|null $config
      */
-    public function saveConfig(array $config = null)
+    public function saveConfig($config = null)
     {
         if ($config) {
             $this->setConfig($config);
@@ -357,7 +357,7 @@ abstract class FlickrCliCommand extends Command
     /**
      * @param int $signal
      */
-    private function signalHandler(int $signal)
+    private function signalHandler($signal)
     {
         $this->exit++;
 
@@ -371,7 +371,7 @@ abstract class FlickrCliCommand extends Command
      * @param OutputInterface $output
      * @return int
      */
-    protected function execute(InputInterface $input, OutputInterface $output): int
+    protected function execute($input, $output)
     {
         $this->setup($input, $output);
 

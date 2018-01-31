@@ -36,7 +36,7 @@ class FilesCommand extends FlickrCliCommand
      * @param OutputInterface $output
      * @return int
      */
-    protected function execute(InputInterface $input, OutputInterface $output): int
+    protected function execute($input, $output)
     {
         parent::execute($input, $output);
 
@@ -56,7 +56,7 @@ class FilesCommand extends FlickrCliCommand
                 continue;
             }
 
-            $xmlPhotoListOptions = ['photoset_id' => $photosetId];
+            $xmlPhotoListOptions = array('photoset_id' => $photosetId);
             $xmlPhotoList = $apiFactory->call('flickr.photosets.getPhotos', $xmlPhotoListOptions);
             $xmlPhotoListPagesTotal = (int)$xmlPhotoList->photoset->attributes()->pages;
             $xmlPhotoListPhotosTotal = (int)$xmlPhotoList->photoset->attributes()->total;

@@ -20,7 +20,7 @@ class AlbumsCommand extends FlickrCliCommand
      * @param OutputInterface $output
      * @return int
      */
-    protected function execute(InputInterface $input, OutputInterface $output): int
+    protected function execute($input, $output)
     {
         parent::execute($input, $output);
 

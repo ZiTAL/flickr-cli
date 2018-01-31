@@ -1,3 +1,9 @@
+# PHP5 Compatible FORK of flickr-cli
+
+[flickr-cli](https://github.com/TheFox/flickr-cli)
+
+Edited **composer.lock** file to change *"php"* values for this.
+
 # FlickrCLI
 
 A command-line interface to [Flickr](https://www.flickr.com/). Upload and download photos, photo sets, directories via shell.
@@ -6,14 +12,22 @@ A command-line interface to [Flickr](https://www.flickr.com/). Upload and downlo
 
 1. Clone from Github:
 
-		git clone https://github.com/TheFox/flickr-cli.git
+		git clone https://github.com/ZiTAL/flickr-cli.git
+		
+2. Install composer:
 
-2. Install dependencies:
+	bash composer.sh
 
-		composer install
+3. Install dependencies:
 
-3. Go to <https://www.flickr.com/services/apps/create/apply/> to create a new API key.
-The first time you run `./bin/flickr-cli auth` you'll be prompted to enter your new consumer key and secret.
+		 php composer.phar install
+
+4. Go to <https://www.flickr.com/services/apps/create/apply/> to create a new API key.
+The first time you run:
+
+`./bin/flickr-cli auth -c config.yml`
+
+you'll be prompted to enter your new consumer key and secret.
 
 ## Usage
 

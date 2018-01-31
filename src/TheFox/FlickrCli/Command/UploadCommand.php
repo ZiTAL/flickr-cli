@@ -46,7 +46,7 @@ class UploadCommand extends FlickrCliCommand
      * @param OutputInterface $output
      * @return int
      */
-    protected function execute(InputInterface $input, OutputInterface $output): int
+    protected function execute($input, $output)
     {
         parent::execute($input, $output);
 
@@ -84,7 +84,7 @@ class UploadCommand extends FlickrCliCommand
         $timePrev = 0;
         $uploadedTotal = 0;
         $uploadedPrev = 0;
-        $uploadedDiffPrev = [0, 0, 0, 0, 0];
+        $uploadedDiffPrev = array(0, 0, 0, 0, 0);
 
         $curlOptions[CURLOPT_PROGRESSFUNCTION] = function ($ch, $dlTotal = 0, $dlNow = 0, $ulTotal = 0, $ulNow = 0) use ($timePrev, $uploadedTotal, $uploadedPrev, $uploadedDiffPrev) {
 
@@ -141,11 +141,11 @@ class UploadCommand extends FlickrCliCommand
         if ($input->getOption('sets')) {
             $photosetNames = preg_split('/,/', $input->getOption('sets'));
         } else {
-            $photosetNames = [];
+            $photosetNames = array();
         }
 
-        $photosetAll = [];
-        $photosetAllLower = [];
+        $photosetAll = array();
+        $photosetAllLower = array();
 
         $apiFactory = $apiService->getApiFactory();
         $xml = $apiFactory->call('flickr.photosets.getList');
@@ -167,8 +167,8 @@ class UploadCommand extends FlickrCliCommand
             $photosetAllLower[$id] = strtolower($title);
         }
 
-        $photosets = [];
-        $photosetsNew = [];
+        $photosets = array();
+        $photosetsNew = array();
         foreach ($photosetNames as $photosetTitle) {
             $id = 0;
 
@@ -205,7 +205,7 @@ class UploadCommand extends FlickrCliCommand
         $totalFiles = 0;
         $totalFilesUploaded = 0;
         $fileErrors = 0;
-        $filesFailed = [];
+        $filesFailed = array();
 
         $filter = function (SplFileInfo $file) {
             if (in_array($file->getFilename(), FlickrCli::FILES_INORE)) {
@@ -329,10 +329,10 @@ class UploadCommand extends FlickrCliCommand
 
                         $xml = null;
                         try {
-                            $xml = $apiFactory->call('flickr.photosets.create', [
+                            $xml = $apiFactory->call('flickr.photosets.create', array(
                                 'title' => $photosetTitle,
                                 'primary_photo_id' => $photoId,
-                            ]);
+                            ));
                         } catch (Exception $e) {
                             $this->getLogger()->critical(sprintf('[photoset] create %s FAILED: %s', $photosetTitle, $e->getMessage()));
                             return 1;
@@ -355,15 +355,15 @@ class UploadCommand extends FlickrCliCommand
                 if (count($photosets)) {
                     $this->getLogger()->info('[file] add to sets ... ');
 
-                    $logLine = [];
+                    $logLine = array();
                     foreach ($photosets as $photosetId) {
                         $logLine[] = substr($photosetId, -5);
 
                         try {
-                            $xml = $apiFactory->call('flickr.photosets.addPhoto', [
+                            $xml = $apiFactory->call('flickr.photosets.addPhoto', array(
                                 'photoset_id' => $photosetId,
                                 'photo_id' => $photoId,
-                            ]);
+                            ));
                         } catch (Exception $e) {
                             $this->getLogger()->critical(sprintf('[file] add to sets FAILED: %s', $e->getMessage()));
                             return 1;

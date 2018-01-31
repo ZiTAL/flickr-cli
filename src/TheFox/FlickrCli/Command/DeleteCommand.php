@@ -25,7 +25,7 @@ class DeleteCommand extends FlickrCliCommand
      * @param OutputInterface $output
      * @return int
      */
-    protected function execute(InputInterface $input, OutputInterface $output): int
+    protected function execute($input, $output)
     {
         parent::execute($input, $output);
 
@@ -47,9 +47,9 @@ class DeleteCommand extends FlickrCliCommand
                 continue;
             }
 
-            $xmlPhotoListOptions = [
-                'photoset_id' => $photosetId,
-            ];
+            $xmlPhotoListOptions = array(
+                'photoset_id' => $photosetId
+            );
             $xmlPhotoList = $apiFactory->call('flickr.photosets.getPhotos', $xmlPhotoListOptions);
             $xmlPhotoListAttributes = $xmlPhotoList->photoset->attributes();
             $xmlPhotoListPagesTotal = (int)$xmlPhotoListAttributes->pages;
@@ -82,7 +82,7 @@ class DeleteCommand extends FlickrCliCommand
                     $fileCount++;
                     $id = (string)$photo->attributes()->id;
                     try {
-                        $apiFactory->call('flickr.photos.delete', ['photo_id' => $id]);
+                        $apiFactory->call('flickr.photos.delete', array('photo_id' => $id));
                         $this->getLogger()->info(sprintf('[photo] %d/%d deleted %s', $page, $fileCount, $id));
                     } catch (Exception $e) {
                         $this->getLogger()->info(sprintf('[photo] %d/%d delete %s FAILED: %s', $page, $fileCount, $id, $e->getMessage()));

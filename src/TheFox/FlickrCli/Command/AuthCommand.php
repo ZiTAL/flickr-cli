@@ -54,7 +54,7 @@ class AuthCommand extends FlickrCliCommand
      * @param InputInterface $input
      * @param OutputInterface $output
      */
-    protected function setup(InputInterface $input, OutputInterface $output)
+    protected function setup($input, $output)
     {
         $this->setIsConfigFileRequired(false);
 
@@ -74,7 +74,7 @@ class AuthCommand extends FlickrCliCommand
      * @param OutputInterface $output
      * @return int
      */
-    protected function execute(InputInterface $input, OutputInterface $output): int
+    protected function execute($input, $output)
     {
         $this->setup($input, $output);
 
@@ -94,12 +94,12 @@ class AuthCommand extends FlickrCliCommand
             $customerKey = $this->io->ask('Consumer key');
             $customerSecret = $this->io->ask('Consumer secret');
 
-            $config = [
-                'flickr' => [
+            $config = array(
+                'flickr' => array(
                     'consumer_key' => $customerKey,
-                    'consumer_secret' => $customerSecret,
-                ],
-            ];
+                    'consumer_secret' => $customerSecret
+                ),
+            );
             $this->saveConfig($config);
 
             // Fetch again, to make sure it's saved correctly.
@@ -146,7 +146,7 @@ class AuthCommand extends FlickrCliCommand
      * @param string $customerSecret
      * @return array
      */
-    protected function authenticate(string $configPath, string $customerKey, string $customerSecret)
+    protected function authenticate($configPath, $customerKey, $customerSecret)
     {
         $storage = new Memory();
 
@@ -175,10 +175,10 @@ class AuthCommand extends FlickrCliCommand
         // Ask user for permissions.
         $permissions = $this->getPermissionType();
 
-        $additionalParameters = [
+        $additionalParameters = array(
             'oauth_token' => $accessToken,
-            'perms' => $permissions,
-        ];
+            'perms' => $permissions
+        );
         $url = $flickrService->getAuthorizationUri($additionalParameters);
 
         $this->io->writeln(sprintf("Go to this URL to authorize FlickrCLI:\n\n%s", $url));
@@ -200,10 +200,10 @@ class AuthCommand extends FlickrCliCommand
         $accessToken = $token->getAccessToken();
         $accessTokenSecret = $token->getAccessTokenSecret();
 
-        $newConfig = [
+        $newConfig = array(
             'token' => $accessToken,
             'token_secret' => $accessTokenSecret,
-        ];
+        );
         return $newConfig;
     }
 
@@ -212,16 +212,16 @@ class AuthCommand extends FlickrCliCommand
      *
      * @return string The permission, one of 'read', write', or 'delete'. Defaults to 'read'.
      */
-    protected function getPermissionType(): string
+    protected function getPermissionType()
     {
         $this->io->writeln('The permission you grant to FlickrCLI depends on what you want to do with it.');
 
         $question = 'Please select from the following three options';
-        $choices = [
+        $choices = array(
             'read' => 'download photos',
             'write' => 'upload photos',
-            'delete' => 'download and/or delete photos from Flickr',
-        ];
+            'delete' => 'download and/or delete photos from Flickr'
+        );
 
         // Note that we're not currently setting a default here, because it is not yet possible
         // to set a non-numeric key as the default. https://github.com/symfony/symfony/issues/15032

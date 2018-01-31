@@ -27,7 +27,7 @@ class PiwigoCommand extends FlickrCliCommand
     /**
      * @return Connection
      */
-    public function getConnection(): Connection
+    public function getConnection()
     {
         return $this->connection;
     }
@@ -35,7 +35,7 @@ class PiwigoCommand extends FlickrCliCommand
     /**
      * @param Connection $connection
      */
-    public function setConnection(Connection $connection)
+    public function setConnection($connection)
     {
         $this->connection = $connection;
     }
@@ -58,7 +58,7 @@ class PiwigoCommand extends FlickrCliCommand
      *
      * @return int
      */
-    protected function execute(InputInterface $input, OutputInterface $output): int
+    protected function execute($input, $output)
     {
         parent::execute($input, $output);
 
@@ -102,13 +102,13 @@ class PiwigoCommand extends FlickrCliCommand
         $config = $this->getConfig();
 
         $dbConfig = new Configuration();
-        $connectionParams = [
+        $connectionParams = array(
             'dbname' => $config['piwigo']['dbname'],
             'user' => $config['piwigo']['dbuser'],
             'password' => $config['piwigo']['dbpass'],
             'host' => $config['piwigo']['dbhost'],
-            'driver' => 'pdo_mysql',
-        ];
+            'driver' => 'pdo_mysql'
+        );
         $conn = DriverManager::getConnection($connectionParams, $dbConfig);
 
         $this->setConnection($conn);
@@ -160,17 +160,17 @@ class PiwigoCommand extends FlickrCliCommand
         } else {
             $md5sum = $image['md5sum'];
         }
-        $tags = [sprintf('checksum:md5=%s', $md5sum)];
+        $tags = array(sprintf('checksum:md5=%s', $md5sum));
         while ($cat = $cats->fetch()) {
             $tags[] = $cat['name'];
         }
 
         // Make sure it's not already on Flickr (by MD5 checksum only).
         $apiFactory = $this->getApiService()->getApiFactory();
-        $md5search = $apiFactory->call('flickr.photos.search', [
+        $md5search = $apiFactory->call('flickr.photos.search', array(
             'user_id' => 'me',
             'tags' => sprintf('checksum:md5=%s', $md5sum),
-        ]);
+        ));
         if (((int)$md5search->photos['total']) > 0) {
             $this->getOutput()->writeln(sprintf('Already exists: %s', $image['name']));
             return;
@@ -195,27 +195,27 @@ class PiwigoCommand extends FlickrCliCommand
         $cats->execute();
         while ($cat = $cats->fetch()) {
             $photosetId = $this->getPhotosetId($cat['name'], $photoId);
-            $apiFactory->call('flickr.photosets.addPhoto', [
+            $apiFactory->call('flickr.photosets.addPhoto', array(
                 'photoset_id' => $photosetId,
                 'photo_id' => $photoId,
-            ]);
+            ));
         }
 
         // Add to an import photoset.
         $importFromPiwigoId = $this->getPhotosetId('Imported from Piwigo', $photoId);
-        $apiFactory->call('flickr.photosets.addPhoto', [
+        $apiFactory->call('flickr.photosets.addPhoto', array(
             'photoset_id' => $importFromPiwigoId,
             'photo_id' => $photoId,
-        ]);
+        ));
 
         // Set location on Flickr.
         if (!empty($image['latitude']) && !empty($image['longitude'])) {
             $this->getOutput()->write(' [location]');
-            $apiFactory->call('flickr.photos.geo.setLocation', [
+            $apiFactory->call('flickr.photos.geo.setLocation', array(
                 'photo_id' => $photoId,
                 'lat' => $image['latitude'],
-                'lon' => $image['longitude'],
-            ]);
+                'lon' => $image['longitude']
+            ));
         } else {
             $this->getOutput()->write(' [no location]');
         }
@@ -237,7 +237,7 @@ class PiwigoCommand extends FlickrCliCommand
 
         // First get all existing albums (once only).
         if (!is_array($this->photosets)) {
-            $this->photosets = [];
+            $this->photosets = array();
             $getList = $apiFactory->call('flickr.photosets.getList');
             /**
              * @var string $n
@@ -259,10 +259,10 @@ class PiwigoCommand extends FlickrCliCommand
 
         // Otherwise, create it.
         $this->getOutput()->write(sprintf(' [creating new photoset: %s]', $photosetName));
-        $newPhotoset = $apiFactory->call('flickr.photosets.create', [
+        $newPhotoset = $apiFactory->call('flickr.photosets.create', array(
             'title' => $photosetName,
-            'primary_photo_id' => $primaryPhotoId,
-        ]);
+            'primary_photo_id' => $primaryPhotoId
+        ));
         $newId = (int)$newPhotoset->photoset->attributes()->id;
         $this->photosets[$newId] = $photosetName;
         return $newId;

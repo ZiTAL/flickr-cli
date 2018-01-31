@@ -98,7 +98,7 @@ class DownloadCommand extends FlickrCliCommand
      * @param OutputInterface $output An OutputInterface instance
      * @return int 0 if everything went fine, or an error code.
      */
-    protected function execute(InputInterface $input, OutputInterface $output): int
+    protected function execute($input, $output)
     {
         parent::execute($input, $output);
 
@@ -124,7 +124,7 @@ class DownloadCommand extends FlickrCliCommand
      *
      * @return int
      */
-    protected function downloadByAlbumTitle(): int
+    protected function downloadByAlbumTitle()
     {
         $this->getLogger()->info(sprintf('Downloading to Album-based directories in: %s', $this->destinationPath));
 
@@ -137,7 +137,7 @@ class DownloadCommand extends FlickrCliCommand
             throw new RuntimeException('photosets is not an array');
         }
 
-        $photosetsInUse = [];
+        $photosetsInUse = array();
         if (count($photosets)) {
             $photosetTitles = $apiService->getPhotosetTitles();
 
@@ -210,9 +210,9 @@ class DownloadCommand extends FlickrCliCommand
             }
 
             $this->getLogger()->info(sprintf('[photoset] %s: get photo list', $photosetTitle));
-            $xmlPhotoList = $apiFactory->call('flickr.photosets.getPhotos', [
+            $xmlPhotoList = $apiFactory->call('flickr.photosets.getPhotos', array(
                 'photoset_id' => $photosetId,
-            ]);
+            ));
             $xmlPhotoListPagesTotal = (int)$xmlPhotoList->photoset->attributes()->pages;
             // $xmlPhotoListPhotosTotal = (int)$xmlPhotoList->photoset->attributes()->total;
 
@@ -228,10 +228,10 @@ class DownloadCommand extends FlickrCliCommand
 
                 if ($page > 1) {
                     $this->getLogger()->info(sprintf('[photoset] %s: get photo list', $photosetTitle));
-                    $xmlPhotoList = $apiFactory->call('flickr.photosets.getPhotos', [
+                    $xmlPhotoList = $apiFactory->call('flickr.photosets.getPhotos', array(
                         'photoset_id' => $photosetId,
-                        'page' => $page,
-                    ]);
+                        'page' => $page
+                    ));
                 }
 
                 /** @var $photo SimpleXMLElement */
@@ -275,17 +275,17 @@ class DownloadCommand extends FlickrCliCommand
      * @return SimpleXMLElement|boolean Photo metadata as returned by Flickr, or false if something went wrong.
      * @throws Exception
      */
-    private function downloadPhoto(SimpleXMLElement $photo, string $destinationPath, string $basename = null)
+    private function downloadPhoto($photo, $destinationPath, $basename = null)
     {
         $id = (string)$photo->attributes()->id;
 
         $apiFactory = $this->getApiService()->getApiFactory();
 
         try {
-            $xmlPhoto = $apiFactory->call('flickr.photos.getInfo', [
+            $xmlPhoto = $apiFactory->call('flickr.photos.getInfo', array(
                 'photo_id' => $id,
                 'secret' => (string)$photo->attributes()->secret,
-            ]);
+            ));
             if (!$xmlPhoto) {
                 return false;
             }
@@ -525,7 +525,7 @@ class DownloadCommand extends FlickrCliCommand
         // 1. Download any photos not in a set.
         $notInSetPage = 1;
         do {
-            $notInSet = $apiFactory->call('flickr.photos.getNotInSet', ['page' => $notInSetPage]);
+            $notInSet = $apiFactory->call('flickr.photos.getNotInSet', array('page' => $notInSetPage));
             $pages = (int)$notInSet->photos['pages'];
             $this->getLogger()->info(sprintf('Not in set p%s/%d', $notInSetPage, $pages));
 
@@ -538,7 +538,7 @@ class DownloadCommand extends FlickrCliCommand
         // 2. Download all photos in all sets.
         $setsPage = 1;
         do {
-            $sets = $apiFactory->call('flickr.photosets.getList', ['page' => $setsPage]);
+            $sets = $apiFactory->call('flickr.photosets.getList', array('page' => $setsPage));
             $pages = (int)$sets->photosets['pages'];
             $this->getLogger()->info(sprintf('Sets p%d/%d', $setsPage, $pages));
 
@@ -546,10 +546,10 @@ class DownloadCommand extends FlickrCliCommand
                 // Loop through all pages in this set.
                 $setPhotosPage = 1;
                 do {
-                    $params = [
+                    $params = array(
                         'photoset_id' => $set['id'],
                         'page' => $setPhotosPage,
-                    ];
+                    );
                     $setPhotos = $apiFactory->call('flickr.photosets.getPhotos', $params);
 
                     $title = (string)$set->title;
@@ -581,7 +581,7 @@ class DownloadCommand extends FlickrCliCommand
      *
      * @param SimpleXMLElement $photo Basic photo metadata.
      */
-    private function downloadPhotoById(SimpleXMLElement $photo)
+    private function downloadPhotoById($photo)
     {
         $id = $photo['id'];
         $idHash = md5($id);
@@ -612,7 +612,7 @@ class DownloadCommand extends FlickrCliCommand
      * @param ApiFactory $apiFactory
      * @return \Closure
      */
-    private function getMappingFunction(ApiFactory $apiFactory)
+    private function getMappingFunction($apiFactory)
     {
         /**
          * @param SimpleXMLElement $photo
@@ -634,40 +634,40 @@ class DownloadCommand extends FlickrCliCommand
                 //$metadata['tags'] = array_map($tagsFn, $tags);
 
                 foreach ($photo->tags->tag as $tag) {
-                    $metadata['tags'][] = [
+                    $metadata['tags'][] = array(
                         'id' => (string)$tag['id'],
                         'slug' => (string)$tag,
                         'title' => (string)$tag['raw'],
-                        'machine' => $tag['machine_tag'] !== '0',
-                    ];
+                        'machine' => $tag['machine_tag'] !== '0'
+                    );
                 }
             }
 
             // Location
             if (isset($photo->location)) {
-                $metadata['location'] = [
+                $metadata['location'] = array(
                     'latitude' => (float)$photo->location['latitude'],
                     'longitude' => (float)$photo->location['longitude'],
                     'accuracy' => (integer)$photo->location['accuracy'],
-                ];
+                );
             }
 
             // Contexts
-            $contexts = $apiFactory->call('flickr.photos.getAllContexts', ['photo_id' => $photo['id']]);
+            $contexts = $apiFactory->call('flickr.photos.getAllContexts', array('photo_id' => $photo['id']));
             foreach ($contexts->set as $set) {
-                $metadata['sets'][] = [
+                $metadata['sets'][] = array(
                     'id' => (string)$set['id'],
                     'title' => (string)$set['title'],
-                ];
+                );
             }
 
             // Pools
             foreach ($contexts->pool as $pool) {
-                $metadata['pools'][] = [
+                $metadata['pools'][] = array(
                     'id' => (string)$pool['id'],
                     'title' => (string)$pool['title'],
                     'url' => (string)$pool['url'],
-                ];
+                );
             }
 
             return $metadata;
@@ -686,7 +686,7 @@ class DownloadCommand extends FlickrCliCommand
          * @return array
          */
         $fn = function (SimpleXMLElement $photo) {
-            $metadata = [
+            $metadata = array(
                 'id' => (int)$photo['id'],
                 'title' => (string)$photo->title,
                 'license' => (string)$photo['license'],
@@ -694,29 +694,29 @@ class DownloadCommand extends FlickrCliCommand
                 'rotation' => (string)$photo['rotation'],
                 'media' => (string)$photo['media'],
                 'format' => (string)$photo['originalformat'],
-                'owner' => [
+                'owner' => array(
                     'nsid' => (string)$photo->owner['nsid'],
                     'username' => (string)$photo->owner['username'],
                     'realname' => (string)$photo->owner['realname'],
                     'path_alias' => (string)$photo->owner['path_alias'],
-                ],
-                'visibility' => [
+                ),
+                'visibility' => array(
                     'ispublic' => (boolean)$photo->visibility['ispublic'],
                     'isfriend' => (boolean)$photo->visibility['isfriend'],
                     'isfamily' => (boolean)$photo->visibility['isfamily'],
-                ],
-                'dates' => [
+                ),
+                'dates' => array(
                     'posted' => (string)$photo->dates['posted'],
                     'taken' => (string)$photo->dates['taken'],
                     'takengranularity' => (int)$photo->dates['takengranularity'],
                     'takenunknown' => (string)$photo->dates['takenunknown'],
                     'lastupdate' => (string)$photo->dates['lastupdate'],
                     'uploaded' => (string)$photo['dateuploaded'],
-                ],
-                'tags' => [],
-                'sets' => [],
-                'pools' => [],
-            ];
+                ),
+                'tags' => array(),
+                'sets' => array(),
+                'pools' => array()
+            );
             return $metadata;
         };
 
