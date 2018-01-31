@@ -35,7 +35,7 @@ you'll be prompted to enter your new consumer key and secret.
 
 First, get the access token:
 
-	./bin/flickr-cli auth
+	./bin/flickr-cli auth -c config.yml
 
 ### Upload
 
