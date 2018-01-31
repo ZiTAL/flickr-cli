@@ -1,8 +1,10 @@
-# PHP5 Compatible FORK of flickr-cli
+# FLICKR-PHP-CLI
+
+PHP5 Compatible FORK of flickr-cli
 
 [flickr-cli](https://github.com/TheFox/flickr-cli)
 
-Edited **composer.lock** file to change *"php"* values for this.
+Edited **composer.lock** file to change *"php"* values for installation compatibility.
 
 # FlickrCLI
 
