@@ -331,7 +331,7 @@ class UploadCommand extends FlickrCliCommand
                         try {
                             $xml = $apiFactory->call('flickr.photosets.create', array(
                                 'title' => $photosetTitle,
-                                'primary_photo_id' => $photoId,
+                                'primary_photo_id' => $photoId
                             ));
                         } catch (Exception $e) {
                             $this->getLogger()->critical(sprintf('[photoset] create %s FAILED: %s', $photosetTitle, $e->getMessage()));
@@ -362,7 +362,7 @@ class UploadCommand extends FlickrCliCommand
                         try {
                             $xml = $apiFactory->call('flickr.photosets.addPhoto', array(
                                 'photoset_id' => $photosetId,
-                                'photo_id' => $photoId,
+                                'photo_id' => $photoId
                             ));
                         } catch (Exception $e) {
                             $this->getLogger()->critical(sprintf('[file] add to sets FAILED: %s', $e->getMessage()));

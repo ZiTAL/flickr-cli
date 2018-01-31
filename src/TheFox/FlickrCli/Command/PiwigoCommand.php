@@ -169,7 +169,7 @@ class PiwigoCommand extends FlickrCliCommand
         $apiFactory = $this->getApiService()->getApiFactory();
         $md5search = $apiFactory->call('flickr.photos.search', array(
             'user_id' => 'me',
-            'tags' => sprintf('checksum:md5=%s', $md5sum),
+            'tags' => sprintf('checksum:md5=%s', $md5sum)
         ));
         if (((int)$md5search->photos['total']) > 0) {
             $this->getOutput()->writeln(sprintf('Already exists: %s', $image['name']));
@@ -197,7 +197,7 @@ class PiwigoCommand extends FlickrCliCommand
             $photosetId = $this->getPhotosetId($cat['name'], $photoId);
             $apiFactory->call('flickr.photosets.addPhoto', array(
                 'photoset_id' => $photosetId,
-                'photo_id' => $photoId,
+                'photo_id' => $photoId
             ));
         }
 
@@ -205,7 +205,7 @@ class PiwigoCommand extends FlickrCliCommand
         $importFromPiwigoId = $this->getPhotosetId('Imported from Piwigo', $photoId);
         $apiFactory->call('flickr.photosets.addPhoto', array(
             'photoset_id' => $importFromPiwigoId,
-            'photo_id' => $photoId,
+            'photo_id' => $photoId
         ));
 
         // Set location on Flickr.

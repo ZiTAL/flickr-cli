@@ -202,7 +202,7 @@ class AuthCommand extends FlickrCliCommand
 
         $newConfig = array(
             'token' => $accessToken,
-            'token_secret' => $accessTokenSecret,
+            'token_secret' => $accessTokenSecret
         );
         return $newConfig;
     }

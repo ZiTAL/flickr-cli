@@ -211,7 +211,7 @@ class DownloadCommand extends FlickrCliCommand
 
             $this->getLogger()->info(sprintf('[photoset] %s: get photo list', $photosetTitle));
             $xmlPhotoList = $apiFactory->call('flickr.photosets.getPhotos', array(
-                'photoset_id' => $photosetId,
+                'photoset_id' => $photosetId
             ));
             $xmlPhotoListPagesTotal = (int)$xmlPhotoList->photoset->attributes()->pages;
             // $xmlPhotoListPhotosTotal = (int)$xmlPhotoList->photoset->attributes()->total;
@@ -284,7 +284,7 @@ class DownloadCommand extends FlickrCliCommand
         try {
             $xmlPhoto = $apiFactory->call('flickr.photos.getInfo', array(
                 'photo_id' => $id,
-                'secret' => (string)$photo->attributes()->secret,
+                'secret' => (string)$photo->attributes()->secret
             ));
             if (!$xmlPhoto) {
                 return false;
@@ -548,7 +548,7 @@ class DownloadCommand extends FlickrCliCommand
                 do {
                     $params = array(
                         'photoset_id' => $set['id'],
-                        'page' => $setPhotosPage,
+                        'page' => $setPhotosPage
                     );
                     $setPhotos = $apiFactory->call('flickr.photosets.getPhotos', $params);
 
@@ -648,7 +648,7 @@ class DownloadCommand extends FlickrCliCommand
                 $metadata['location'] = array(
                     'latitude' => (float)$photo->location['latitude'],
                     'longitude' => (float)$photo->location['longitude'],
-                    'accuracy' => (integer)$photo->location['accuracy'],
+                    'accuracy' => (integer)$photo->location['accuracy']
                 );
             }
 
@@ -657,7 +657,7 @@ class DownloadCommand extends FlickrCliCommand
             foreach ($contexts->set as $set) {
                 $metadata['sets'][] = array(
                     'id' => (string)$set['id'],
-                    'title' => (string)$set['title'],
+                    'title' => (string)$set['title']
                 );
             }
 
@@ -666,7 +666,7 @@ class DownloadCommand extends FlickrCliCommand
                 $metadata['pools'][] = array(
                     'id' => (string)$pool['id'],
                     'title' => (string)$pool['title'],
-                    'url' => (string)$pool['url'],
+                    'url' => (string)$pool['url']
                 );
             }
 
@@ -698,12 +698,12 @@ class DownloadCommand extends FlickrCliCommand
                     'nsid' => (string)$photo->owner['nsid'],
                     'username' => (string)$photo->owner['username'],
                     'realname' => (string)$photo->owner['realname'],
-                    'path_alias' => (string)$photo->owner['path_alias'],
+                    'path_alias' => (string)$photo->owner['path_alias']
                 ),
                 'visibility' => array(
                     'ispublic' => (boolean)$photo->visibility['ispublic'],
                     'isfriend' => (boolean)$photo->visibility['isfriend'],
-                    'isfamily' => (boolean)$photo->visibility['isfamily'],
+                    'isfamily' => (boolean)$photo->visibility['isfamily']
                 ),
                 'dates' => array(
                     'posted' => (string)$photo->dates['posted'],
@@ -711,7 +711,7 @@ class DownloadCommand extends FlickrCliCommand
                     'takengranularity' => (int)$photo->dates['takengranularity'],
                     'takenunknown' => (string)$photo->dates['takenunknown'],
                     'lastupdate' => (string)$photo->dates['lastupdate'],
-                    'uploaded' => (string)$photo['dateuploaded'],
+                    'uploaded' => (string)$photo['dateuploaded']
                 ),
                 'tags' => array(),
                 'sets' => array(),
