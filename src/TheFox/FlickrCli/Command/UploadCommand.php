@@ -35,6 +35,9 @@ class UploadCommand extends FlickrCliCommand
         $this->addOption('is-public', null, InputOption::VALUE_NONE, 'Make resource public');
         $this->addOption('is-friend', null, InputOption::VALUE_NONE, 'Make resource friend');
         $this->addOption('is-family', null, InputOption::VALUE_NONE, 'Make resource family');
+        $this->addOption('safety-level', null, InputOption::VALUE_OPTIONAL, 'Set to 1 for Safe, 2 for Moderate, or 3 for Restricted');
+        $this->addOption('content-type', null, InputOption::VALUE_OPTIONAL, 'Set to 1 for Photo, 2 for Screenshot, or 3 for Other');
+        $this->addOption('hidden', null, InputOption::VALUE_OPTIONAL, 'Set to 1 for Photo, 2 for Screenshot, or 3 for Other');
 
         $this->addArgument('directory', InputArgument::IS_ARRAY, 'Path to directories.');
     }
@@ -67,6 +70,28 @@ class UploadCommand extends FlickrCliCommand
         $is_public = $input->getOption('is-public');
         $is_friend = $input->getOption('is-friend');
         $is_family = $input->getOption('is-family');
+        
+        if ($input->hasOption('safety-level') && $input->getOption('safety-level')) {
+            $safety_level = $input->getOption('safety-level');
+            $this->getLogger()->debug(sprintf('safety-level String: %s', $safety_level));
+        } else {
+            $safety_level = null;
+        }
+        
+        if ($input->hasOption('content-type') && $input->getOption('content-type')) {
+            $content_type= $input->getOption('content-type');
+            $this->getLogger()->debug(sprintf('content-type String: %s', $content_type));
+        } else {
+            $content_type = null;
+        }
+        
+        if ($input->hasOption('hidden') && $input->getOption('hidden')) {
+            $hidden = $input->getOption('hidden');
+            $this->getLogger()->debug(sprintf('hidden String: %s', $hidden));
+        } else {
+            $hidden = null;
+        }        
+        
         $recursive = $input->getOption('recursive');
         $dryrun = $input->getOption('dry-run');
 
@@ -286,7 +311,7 @@ class UploadCommand extends FlickrCliCommand
 
                 $this->getLogger()->info(sprintf('[file] upload "%s" %s', $fileRelativePathStr, $uploadFileSizeFormatted));
                 try {
-                    $xml = $apiFactoryVerbose->upload($filePath, $fileName, $description, $tags, $is_public, $is_friend, $is_family);
+                    $xml = $apiFactoryVerbose->upload($filePath, $fileName, $description, $tags, $is_public, $is_friend, $is_family, $safety_level, $content_type, $hidden);
 
                     print "\n";
                 } catch (Exception $e) {
