@@ -37,6 +37,7 @@ class UploadCommand extends FlickrCliCommand
         $this->addOption('recursive', 'r', InputOption::VALUE_NONE, 'Recurse into directories.');
         $this->addOption('dry-run', null, InputOption::VALUE_NONE, 'Show what would have been transferred.');
         $this->addOption('move', 'm', InputOption::VALUE_OPTIONAL, 'Move uploaded files to this directory.');
+        $this->addOption('is_public', 'ip', InputOption::VALUE_OPTIONAL, 'is public');
 
         $this->addArgument('directory', InputArgument::IS_ARRAY, 'Path to directories.');
     }
@@ -65,6 +66,13 @@ class UploadCommand extends FlickrCliCommand
         } else {
             $tags = null;
         }
+        
+        if ($input->hasOption('is_public') && $input->getOption('is_public')) {
+            $is_public = 1;
+            $this->getLogger()->debug(sprintf('is public String: 1'));
+        } else {
+            $is_public = 0;
+        }       
 
         $recursive = $input->getOption('recursive');
         $dryrun = $input->getOption('dry-run');
@@ -208,7 +216,7 @@ class UploadCommand extends FlickrCliCommand
         $filesFailed = array();
 
         $filter = function (SplFileInfo $file) {
-            if (in_array($file->getFilename(), FlickrCli::FILES_INORE)) {
+            if (in_array($file->getFilename(), FlickrCli::$FILES_INORE)) {
                 return false;
             }
             return true;
@@ -264,7 +272,7 @@ class UploadCommand extends FlickrCliCommand
 
                 $totalFiles++;
 
-                if (!in_array(strtolower($fileExt), FlickrCli::ACCEPTED_EXTENTIONS)) {
+                if (!in_array(strtolower($fileExt), FlickrCli::$ACCEPTED_EXTENTIONS)) {
                     $fileErrors++;
                     $filesFailed[] = $fileRelativePathStr;
                     $this->getLogger()->warning(sprintf('[file] invalid extension: %s', $fileRelativePathStr));
@@ -285,7 +293,7 @@ class UploadCommand extends FlickrCliCommand
 
                 $this->getLogger()->info(sprintf('[file] upload "%s" %s', $fileRelativePathStr, $uploadFileSizeFormatted));
                 try {
-                    $xml = $apiFactoryVerbose->upload($filePath, $fileName, $description, $tags);
+                    $xml = $apiFactoryVerbose->upload($filePath, $fileName, $description, $tags, $is_public);
 
                     print "\n";
                 } catch (Exception $e) {

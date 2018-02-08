@@ -346,11 +346,11 @@ abstract class FlickrCliCommand extends Command
 
         declare(ticks=1);
 
-        pcntl_signal(SIGTERM, [$this, 'signalHandler']);
+        pcntl_signal(SIGTERM, array($this, 'signalHandler'));
         /** @uses $this::signalHandler() */
-        pcntl_signal(SIGINT, [$this, 'signalHandler']);
+        pcntl_signal(SIGINT, array($this, 'signalHandler'));
         /** @uses $this::signalHandler() */
-        pcntl_signal(SIGHUP, [$this, 'signalHandler']);
+        pcntl_signal(SIGHUP, array($this, 'signalHandler'));
         /** @uses $this::signalHandler() */
     }
 
