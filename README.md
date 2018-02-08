@@ -16,15 +16,7 @@ A command-line interface to [Flickr](https://www.flickr.com/). Upload and downlo
 
 		git clone https://github.com/ZiTAL/flickr-cli.git
 		
-2. Install composer:
-
-		bash composer.sh
-
-3. Install dependencies:
-
-		 php composer.phar install
-
-4. Go to <https://www.flickr.com/services/apps/create/apply/> to create a new API key.
+2. Go to <https://www.flickr.com/services/apps/create/apply/> to create a new API key.
 The first time you run:
 
 `./bin/flickr-cli auth -c config.yml`
@@ -39,7 +31,7 @@ First, get the access token:
 
 ### Upload
 
-	./bin/flickr-cli upload [-d DESCRIPTION] [-t TAG,...] [-s SET,...] DIRECTORY...
+	./bin/flickr-cli upload -c config.yml [-d DESCRIPTION] [-t TAG,...] [-s SET,...] [--is-public] [--is-friend] [--is-family] [--safety_level,...] [--content-type,...] [--hidden] DIRECTORY...
 
 ### Download
 
