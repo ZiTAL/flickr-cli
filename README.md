@@ -4,7 +4,9 @@ PHP5 Compatible FORK of flickr-cli
 
 [flickr-cli](https://github.com/TheFox/flickr-cli)
 
-Edited **composer.lock** file to change *"php"* values for installation compatibility.
+Added arguments: **is_public**, **is_friend**, **is_family**, **safety_level**, **content_type**, **hidden**
+
+Can't pull request due to incompatibilities :(
 
 # FlickrCLI
 
