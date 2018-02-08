@@ -37,7 +37,7 @@ class UploadCommand extends FlickrCliCommand
         $this->addOption('is-family', null, InputOption::VALUE_NONE, 'Make resource family');
         $this->addOption('safety-level', null, InputOption::VALUE_OPTIONAL, 'Set to 1 for Safe, 2 for Moderate, or 3 for Restricted');
         $this->addOption('content-type', null, InputOption::VALUE_OPTIONAL, 'Set to 1 for Photo, 2 for Screenshot, or 3 for Other');
-        $this->addOption('hidden', null, InputOption::VALUE_OPTIONAL, 'Set to 1 for Photo, 2 for Screenshot, or 3 for Other');
+        $this->addOption('hidden', null, InputOption::VALUE_OPTIONAL, 'Set to 1 to keep the photo in global search results, 2 to hide from public searches');
 
         $this->addArgument('directory', InputArgument::IS_ARRAY, 'Path to directories.');
     }
