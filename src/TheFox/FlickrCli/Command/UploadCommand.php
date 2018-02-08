@@ -27,17 +27,14 @@ class UploadCommand extends FlickrCliCommand
         $this->setDescription('Upload files to Flickr.');
 
         $this->addOption('description', 'd', InputOption::VALUE_OPTIONAL, 'Description for all uploaded files.');
-
-        $csvTagsDesc = 'Comma separated names. For example: --tags=tag1,"Tag two"';
-        $this->addOption('tags', 't', InputOption::VALUE_OPTIONAL, $csvTagsDesc);
-
-        $csvSetsDesc = 'Comma separated names. For example: --sets="Set one",set2';
-        $this->addOption('sets', 's', InputOption::VALUE_OPTIONAL, $csvSetsDesc);
-
+        $this->addOption('tags', 't', InputOption::VALUE_OPTIONAL, 'Comma separated names. For example: --tags=tag1,"Tag two"');
+        $this->addOption('sets', 's', InputOption::VALUE_OPTIONAL, 'Comma separated names. For example: --sets="Set one",set2');
         $this->addOption('recursive', 'r', InputOption::VALUE_NONE, 'Recurse into directories.');
         $this->addOption('dry-run', null, InputOption::VALUE_NONE, 'Show what would have been transferred.');
         $this->addOption('move', 'm', InputOption::VALUE_OPTIONAL, 'Move uploaded files to this directory.');
-        $this->addOption('is_public', 'ip', InputOption::VALUE_OPTIONAL, 'is public');
+        $this->addOption('is-public', null, InputOption::VALUE_NONE, 'Make resource public');
+        $this->addOption('is-friend', null, InputOption::VALUE_NONE, 'Make resource friend');
+        $this->addOption('is-family', null, InputOption::VALUE_NONE, 'Make resource family');
 
         $this->addArgument('directory', InputArgument::IS_ARRAY, 'Path to directories.');
     }
@@ -66,14 +63,10 @@ class UploadCommand extends FlickrCliCommand
         } else {
             $tags = null;
         }
-        
-        if ($input->hasOption('is_public') && $input->getOption('is_public')) {
-            $is_public = 1;
-            $this->getLogger()->debug(sprintf('is public String: 1'));
-        } else {
-            $is_public = 0;
-        }       
 
+        $is_public = $input->getOption('is-public');
+        $is_friend = $input->getOption('is-friend');
+        $is_family = $input->getOption('is-family');
         $recursive = $input->getOption('recursive');
         $dryrun = $input->getOption('dry-run');
 
@@ -293,7 +286,7 @@ class UploadCommand extends FlickrCliCommand
 
                 $this->getLogger()->info(sprintf('[file] upload "%s" %s', $fileRelativePathStr, $uploadFileSizeFormatted));
                 try {
-                    $xml = $apiFactoryVerbose->upload($filePath, $fileName, $description, $tags, $is_public);
+                    $xml = $apiFactoryVerbose->upload($filePath, $fileName, $description, $tags, $is_public, $is_friend, $is_family);
 
                     print "\n";
                 } catch (Exception $e) {
