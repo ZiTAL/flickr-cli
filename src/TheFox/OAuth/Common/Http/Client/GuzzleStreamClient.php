@@ -21,14 +21,14 @@ class GuzzleStreamClient extends AbstractClient
     public function retrieveResponse(
         UriInterface $endpoint,
         $requestBody,
-        array $extraHeaders = [],
+        array $extraHeaders = array(),
         $method = 'POST'
     ) {
     
         $method = strtoupper($method);
 
         $client = new Client();
-        $headers = ['Connection' => 'close'];
+        $headers = array('Connection' => 'close');
         $headers = array_merge($headers, $extraHeaders);
         $response = null;
 
